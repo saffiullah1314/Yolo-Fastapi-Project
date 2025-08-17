@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YOLO Object Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 min-h-screen flex flex-col items-center justify-start py-10">
+
+    <h1 class="text-4xl font-extrabold text-white mb-8 animate-pulse">YOLOv8 Object Detection</h1>
+
+    <form action="/detect" method="post" enctype="multipart/form-data"
+          class="bg-white p-8 rounded-2xl shadow-xl flex flex-col items-center gap-4 w-full max-w-lg animate-fadeIn">
+        
+        <label class="text-gray-700 font-semibold">Choose a file (Image or Video):</label>
+        <input type="file" name="file" class="border border-gray-300 rounded px-3 py-2 w-full" accept="image/*,video/*" required>
+        
+        <button type="submit"
+                class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-all duration-300 shadow-md">
+            Upload & Detect
+        </button>
+
+        {% if error %}
+            <p class="text-red-600 font-semibold mt-4">{{ error }}</p>
+        {% endif %}
+    </form>
+    <!-- Loader -->
+<div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+    <div class="flex flex-col items-center">
+        <!-- Spinner -->
+        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-white"></div>
+        <p class="text-white mt-4 font-semibold text-lg">Processing... Please wait</p>
+    </div>
+</div>
+
+
+    {% if result_image %}
+        <h2 class="text-2xl font-bold mt-10 text-white animate-bounce">Detected Image:</h2>
+        <div class="flex justify-center mt-6">
+            <img src="{{ result_image }}" class="rounded-xl shadow-2xl max-w-[90%] h-auto animate-fadeIn">
+        </div>
+    {% endif %}
+
+   {% if result_video %}
+  <h2 class="text-2xl font-bold mt-10 text-white">Detected Video:</h2>
+  <div class="flex justify-center mt-6">
+    <video controls preload="metadata" playsinline class="rounded-xl shadow-2xl max-w-[90%] h-auto">
+      <source src="{{ result_video }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector("form");
+        const loader = document.getElementById("loader");
+
+        form.addEventListener("submit", () => {
+            // Jab form submit ho loader show karo
+            loader.classList.remove("hidden");
+        });
+    });
+</script>
+
+
+</body>
+</html>

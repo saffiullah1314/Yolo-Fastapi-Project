@@ -1,0 +1,5 @@
+ultralytics==8.0.196   # YOLOv8 ke liye
+fastapi                # backend API banane ke liye
+uvicorn                # FastAPI ko run karne ke liye
+python-multipart       # image uploads handle karne ke liye
+pillow                 # image processing ke liye
