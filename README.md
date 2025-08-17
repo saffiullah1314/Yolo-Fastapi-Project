@@ -75,9 +75,9 @@ with open(upload_path, "wb") as f:
 
 - Prevents overwriting or unsafe paths.
 
-
-### 2️⃣ YOLOv8 Detection
 ```
+### 2️⃣ YOLOv8 Detection
+
 from ultralytics import YOLO
 
 model = YOLO("yolov8n.pt")  # Load pre-trained model
@@ -226,7 +226,7 @@ Open http://127.0.0.1:8000 and upload images/videos.
 
 ## Author Info 📝
 
-Name: Saffi Ullah
-Passion: AI, Machine Learning, Deep Learning, Full-Stack Development
-Experience: 6–7 months learning AI theory, now building real-world projects
-Goal: Share heavy, impactful AI projects soon)
+**Name**: Saffi Ullah
+**Passion**: AI, Machine Learning, Deep Learning, Full-Stack Development
+**Experience**: 6–7 months learning AI theory, now building real-world projects
+**Goal**: Share heavy, impactful AI projects soon)
