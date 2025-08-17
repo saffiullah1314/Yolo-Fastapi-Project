@@ -117,7 +117,7 @@ cap.release()
 
 ## Frontend 🎨
 
-- HTML/CSS + Jinja2 templates for uploading files.
+- HTML/Tailwind css + Jinja2 templates for uploading files.
 
 - Users can see processed images/videos without page reloads.
 
