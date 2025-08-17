@@ -1,0 +1,3 @@
+for  run this project in terminal write this code first =>         .venv\Scripts\activate
+after this one write this code =>      uvicorn app.main:app --reload
+this will give local host click one that local host it will run
