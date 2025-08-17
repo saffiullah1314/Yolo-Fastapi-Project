@@ -1,140 +1,97 @@
-YOLOv8 Object Detection Project 🚀
+# YOLOv8 Object Detection Project 🚀
 
-Welcome to my YOLOv8 Object Detection project! This is a full-stack AI application capable of detecting objects in images and videos using state-of-the-art YOLOv8 deep learning model. It combines Python, FastAPI, OpenCV, HTML/CSS, and provides a web interface for real-time interaction.
-
-
----
-
-Table of Contents 📚
-
-Project Overview
-
-Features
-
-Technologies Used
-
-How It Works
-
-Backend Processing
-
-Frontend
-
-Dataset and Training
-
-Code Snippets
-
-Flow Diagrams
-
-Live Demo
-
-Setup and Usage
-
-Author Info
-
-
+Welcome to my **YOLOv8 Object Detection project**!  
+This is a **full-stack AI application** capable of detecting objects in images and videos using the state-of-the-art **YOLOv8 deep learning model**.  
+It combines **Python, FastAPI, OpenCV, HTML/CSS** and provides a **web interface** for real-time interaction.
 
 ---
 
-Project Overview 🌟
-
-This project detects multiple objects in images or videos and highlights them with bounding boxes and labels.
-It is designed for practical AI applications such as surveillance, research, and automation.
-
-I have been working on AI/ML for the past 6–7 months, focusing on theory and understanding deep learning concepts. Now I am building real-world projects and plan to share advanced, heavy projects soon.
-
-
----
-
-Features ✨
-
-Detect objects in images and videos.
-
-Real-time detection with YOLOv8.
-
-Backend API using FastAPI for processing.
-
-Frontend interface for uploading files.
-
-Annotated output images/videos with bounding boxes and confidence scores.
-
-Secure file handling and storage.
-
-
+## 📚 Table of Contents
+- [Project Overview](#-project-overview-)
+- [Features](#-features-)
+- [Technologies Used](#-technologies-used-)
+- [How It Works](#-how-it-works-)
+- [Backend Processing](#-backend-processing-)
+- [Frontend](#-frontend-)
+- [Dataset and Training](#-dataset-and-training-)
+- [Code Snippets](#-code-snippets-)
+- [Flow Diagrams](#-flow-diagrams-)
+- [Live Demo](#-live-demo-)
+- [Setup and Usage](#-setup-and-usage-)
+- [Author Info](#-author-info-)
 
 ---
 
-Technologies Used 🛠
+## 🌟 Project Overview
+- Detects multiple objects in **images** and **videos**.  
+- Highlights them with **bounding boxes** and **labels**.  
+- Designed for real-world AI use cases like **surveillance, research, and automation**.  
 
-Python – Core programming for AI & backend.
-
-FastAPI – Backend API server.
-
-OpenCV – Image/video processing.
-
-YOLOv8 (Ultralytics) – Object detection model.
-
-HTML/CSS + Jinja2 – Frontend interface.
-
-Pathlib & Shutil – File handling in backend.
-
-
+I have been learning **AI/ML for the past 6–7 months**, focusing on deep learning theory.  
+Now I’m building **real-world projects** and will share advanced projects soon!
 
 ---
 
-How It Works ⚙
-
-1. User uploads image/video via frontend.
-
-
-2. FastAPI backend receives the file.
-
-
-3. YOLOv8 model predicts objects and confidence scores.
-
-
-4. Processed results are saved and returned to frontend.
-
-
-5. Frontend displays annotated images/videos.
-
-
-
+## ✨ Features
+- Detect objects in images and videos  
+- Real-time detection with **YOLOv8**  
+- **FastAPI backend API** for processing  
+- **Frontend UI** for uploading files  
+- Annotated outputs with **bounding boxes** and **confidence scores**  
+- Secure file handling and storage  
 
 ---
 
-Backend Processing 🖥
+## 🛠 Technologies Used
+- **Python** – Core programming  
+- **FastAPI** – Backend API server  
+- **OpenCV** – Image/video processing  
+- **YOLOv8 (Ultralytics)** – Object detection model  
+- **HTML/CSS + Jinja2** – Frontend interface  
+- **Pathlib & Shutil** – File handling  
 
-1️⃣ File Handling
+---
 
+## ⚙ How It Works
+1. User uploads image/video via frontend  
+2. FastAPI backend receives the file  
+3. YOLOv8 model predicts objects + confidence scores  
+4. Processed results saved in `/outputs`  
+5. Frontend displays annotated images/videos  
+
+---
+
+## 🖥 Backend Processing
+
+### 1️⃣ File Handling
+```python
 from pathlib import Path
 from fastapi import UploadFile
 
 upload_path = Path("uploads") / file.filename
 with open(upload_path, "wb") as f:
     f.write(file.file.read())
+Ensures secure storage
 
-Ensures secure file storage.
-
-Prevents overwriting or unsafe paths.
-
+Prevents overwriting unsafe paths
 
 2️⃣ YOLOv8 Detection
-
+python
+Copy
+Edit
 from ultralytics import YOLO
 
 model = YOLO("yolov8n.pt")  # Load pre-trained model
 results = model.predict(upload_path)
 results.save("outputs/")
+Predicts objects & confidence
 
-Model predicts objects and confidence scores.
-
-Bounding boxes drawn automatically.
-
-Video frames are processed one by one.
-
+Automatically draws bounding boxes
 
 3️⃣ Video Frame Processing
-
+python
+Copy
+Edit
 import cv2
 
 cap = cv2.VideoCapture("uploads/video.mp4")
@@ -146,48 +103,36 @@ while True:
     for r in results:
         cv2.rectangle(frame, r.xyxy[0], r.xyxy[1], (0,255,0), 2)
 cap.release()
+Extracts frames
 
-Extracts frames from video.
+Processes frame-by-frame
 
-Processes frame by frame.
+Saves annotated video
 
-Saves annotated video at the end.
+🎨 Frontend
+HTML/CSS + Jinja2 templates
 
+Upload interface:
 
-
----
-
-Frontend 🎨
-
-HTML/CSS + Jinja2 templates for uploading files.
-
-Users can see processed images/videos without page reloads.
-
-
+html
+Copy
+Edit
 <form action="/upload" method="post" enctype="multipart/form-data">
     <input type="file" name="file" />
     <button type="submit">Upload</button>
 </form>
+📂 Dataset and Training
+Pre-trained YOLOv8 model on COCO dataset (80 classes)
 
+No custom training required
 
----
+Confidence threshold optimized
 
-Dataset and Training 📂
-
-Uses pre-trained YOLOv8 model on COCO dataset (80 classes).
-
-No custom training required for this project.
-
-Confidence threshold set to optimize detection accuracy.
-
-
-
----
-
-Code Snippets 💻
-
-FastAPI main.py sample:
-
+💻 Code Snippets
+FastAPI main.py
+python
+Copy
+Edit
 from fastapi import FastAPI, UploadFile, File
 from ultralytics import YOLO
 
@@ -202,57 +147,26 @@ async def upload_file(file: UploadFile = File(...)):
     results = model.predict(file_location)
     results.save("outputs/")
     return {"file": f"Processed {file.filename}"}
-
-
----
-
-Flow Diagrams 🗂
-
+🗂 Flow Diagrams
 1️⃣ Backend Processing Flow
 
-User Upload
-     |
-     v
-FastAPI Receives File
-     |
-     v
-YOLOv8 Predicts Objects
-     |
-     v
-Bounding Boxes Added
-     |
-     v
-Save & Send Result to Frontend
-
+mathematica
+Copy
+Edit
+User Upload → FastAPI Receives File → YOLOv8 Predicts → Bounding Boxes Added → Save & Return to Frontend
 2️⃣ Video Frame Processing Flow
 
-Video File
-     |
-     v
-OpenCV Extracts Frames
-     |
-     v
-YOLOv8 Detects Objects Frame-by-Frame
-     |
-     v
-Annotated Frames Saved
-     |
-     v
-Combine Frames -> Output Video
+mathematica
+Copy
+Edit
+Video File → OpenCV Extracts Frames → YOLOv8 Detects → Annotated Frames Saved → Combined Output Video
+🌐 Live Demo
+🔗 Live Demo Link (replace with your hosted link)
 
-
----
-
-Live Demo 🌐
-
-Try the project live here:
-[Live Demo Link] – replace with your hosted link
-
-
----
-
-Setup and Usage ⚡
-
+⚡ Setup and Usage
+bash
+Copy
+Edit
 git clone <repository-url>
 cd <project-folder>
 python -m venv venv
@@ -260,15 +174,14 @@ source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate     # Windows
 pip install -r requirements.txt
 uvicorn main:app --reload
+👉 Open: http://127.0.0.1:8000 and upload files.
 
-Open http://127.0.0.1:8000 and upload images/videos.
-
-
----
-
-Author Info 📝
-
+📝 Author Info
 Name: Saffi Ullah
-Passion: AI, Machine Learning, Deep Learning, Full-Stack Development
-Experience: 6–7 months learning AI theory, now building real-world projects
-Goal: Share heavy, impactful AI projects soon
+Passion: AI, ML, Deep Learning, Full-Stack Development
+Experience: 6–7 months in AI theory, now building real-world projects
+Goal: Share impactful AI projects soon 🚀
+
+yaml
+Copy
+Edit
