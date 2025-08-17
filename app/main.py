@@ -1,4 +1,3 @@
-# app/main.py
 from fastapi import FastAPI, UploadFile, File, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -8,7 +7,6 @@ from ultralytics import YOLO
 import cv2, time, os, io
 import numpy as np
 
-# try imageio writer (uses ffmpeg binary from imageio-ffmpeg)
 try:
     import imageio
     HAVE_IMAGEIO = True
@@ -17,12 +15,11 @@ except Exception:
 
 BASE_DIR = Path(__file__).parent
 MODEL_PATH = BASE_DIR.parent / "models" / "yolov8n.pt"
-# Where we save processed results (served via /static)
 STATIC_DIR = BASE_DIR / "static"
 RESULTS_DIR = STATIC_DIR / "results"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-# Load YOLO model
+
 try:
     model = YOLO(str(MODEL_PATH))
     print("✅ YOLO model loaded successfully!")
@@ -32,7 +29,7 @@ except Exception as e:
 
 app = FastAPI(title="YOLOv8 Object Detection")
 
-# Mount static so browser can fetch /static/...
+
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
@@ -56,6 +53,9 @@ async def detect(request: Request, file: UploadFile = File(...)):
     content_type = (file.content_type or "").lower()
     file_bytes = await file.read()
 
+
+
+
     # -------- IMAGE ----------
     if "image" in content_type:
         np_arr = np.frombuffer(file_bytes, np.uint8)
@@ -64,17 +64,19 @@ async def detect(request: Request, file: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail="Could not decode uploaded image.")
 
         results = model.predict(img, verbose=False)
-        annotated = results[0].plot()  # RGB ndarray
+        annotated = results[0].plot()  
 
         out_name = f"result_{int(time.time())}.jpg"
         out_path = RESULTS_DIR / out_name
-        # convert RGB to BGR for OpenCV write
-        cv2.imwrite(str(out_path), cv2.cvtColor(annotated, cv2.COLOR_RGB2BGR))
+        cv2.imwrite(str(out_path), annotated)
+
 
         return templates.TemplateResponse(
             "index.html",
             {"request": request, "result_image": f"/static/results/{out_name}"}
         )
+
+
 
     # -------- VIDEO ----------
     elif "video" in content_type:
@@ -103,15 +105,13 @@ async def detect(request: Request, file: UploadFile = File(...)):
                     fps=float(fps),
                     codec='libx264',
                     ffmpeg_log_level='error',
-                    # 'pix_fmt' isn't available as param, but libx264 default is OK;
-                    # imageio/ffmpeg will create a playable mp4 with yuv420p.
+                    
                 )
 
                 while True:
                     ret, frame = cap.read()
                     if not ret:
                         break
-                    # frame is BGR (OpenCV). Convert to RGB for imageio
                     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                     # run YOLO on BGR frame (model accepts numpy BGR/RGB; using frame is fine)
                     results = model.predict(frame, verbose=False)
@@ -130,12 +130,10 @@ async def detect(request: Request, file: UploadFile = File(...)):
                         break
                     results = model.predict(frame, verbose=False)
                     annotated = results[0].plot()  # RGB
-                    annotated_bgr = cv2.cvtColor(annotated, cv2.COLOR_RGB2BGR)
-                    writer.write(annotated_bgr)
+                    writer.write(annotated)
                 writer.release()
 
         except Exception as ex:
-            # cleanup and raise
             cap.release()
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
@@ -147,13 +145,12 @@ async def detect(request: Request, file: UploadFile = File(...)):
             raise HTTPException(status_code=500, detail=f"Error writing processed video: {ex}")
 
         cap.release()
-        # remove temporary uploaded file
         try:
             os.remove(tmp_path)
         except Exception:
             pass
 
-        # verify file exists and is non-empty
+
         if not out_path.exists() or out_path.stat().st_size < 1000:
             raise HTTPException(status_code=500, detail="Processed video is empty or not available.")
 
